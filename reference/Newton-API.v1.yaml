@@ -1,0 +1,687 @@
+openapi: 3.0.0
+info:
+  title: Newton Pro API
+  version: '1.0'
+  termsOfService: 'https://www.newton.co/terms-of-use'
+  contact:
+    email: hello@newton.co
+    name: Newton
+    url: 'https://www.newton.co/'
+  description: Newton Pro is a hyper-low-cost digital asset trading platform for active traders. Key features of Newton Pro include extremely low maker/taker fees (0.1%/0.1%), direct order book access, tight spreads, unbeatable liquidity and limit orders. The Newton Pro API provides unrestricted access to trading functions - however, adding or withdrawing of funds must be initiated through the Newton UI.
+servers:
+  - url: 'http://localhost:8000/api'
+    description: Local
+  - url: 'https://app.tradenewton.com/api'
+    description: Production
+paths:
+  /order/history:
+    get:
+      summary: Get Order History
+      tags:
+        - Private
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                No Filter:
+                  value:
+                    - order_id: 3afa4a4e-a010-4ae6-a130-c4aa009285b3
+                      symbol: XRP_CAD
+                      quantity: 100
+                      price: 26.187544
+                      status: COMPLETED
+                      date_created: '2020-03-30T16:18:27.082533Z'
+                      date_executed: '2020-03-30T16:18.59:.082533Z'
+                      order_type: LIMIT
+                      time_in_force: IOC
+                      side: SELL
+                    - order_id: b6fc0293-68f5-4ed0-9774-41d833db21b3
+                      symbol: BTC_CAD
+                      quantity: 1
+                      price: 10324
+                      status: COMPLETED
+                      date_created: '2020-03-30T15:18:21.568690Z'
+                      date_executed: '2020-03-30T15:18:22.568690Z'
+                      order_type: LIMIT
+                      time_in_force: GTD
+                      side: BUY
+                      expiry_time: '2020-04-21T13:04:12.751207Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Invalid Limit Provided:
+                  value:
+                    limit:
+                      - Provided limit invalid.
+                Invalid Offset Provided:
+                  value:
+                    offset:
+                      - Provided offset invalid.
+                Invalid Start/End Date:
+                  value:
+                    start_date:
+                      - Provided start and end date invalid.
+                Invalid Symbol Provided:
+                  value:
+                    symbol:
+                      - Provided symbol invalid.
+                Invalid Time in Force Provided:
+                  value:
+                    time_in_force:
+                      - Provided time in force invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                User Not Authenticated:
+                  value:
+                    detail: Authentication credentials were not provided.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              examples:
+                Permission Denied:
+                  value:
+                    detail: IP blocked.
+      operationId: get-api-order-history
+      description: Get the history of all your orders.
+      security:
+        - API Key: []
+        - Timestamp: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - IOC
+              - GTC
+              - GTD
+            example: IOC
+          in: query
+          name: time_in_force
+          description: Time in force to filter the list. (Comma separated)
+        - schema:
+            type: integer
+            example: 1587416992
+          in: query
+          name: start_date
+          description: The lower limit for time filter. (Unix Epoch Timesamp)
+        - schema:
+            type: integer
+            example: 1587416992
+          in: query
+          name: end_date
+          description: The upper limit for time filter. (Unix Epoch Timesamp)
+        - schema:
+            type: integer
+            example: 1
+            minimum: 0
+          in: query
+          name: limit
+          description: Number of orders to be returned.
+        - schema:
+            type: integer
+            example: 2
+            minimum: 0
+          in: query
+          name: offset
+          description: Offset for the number of orders to be returned.
+        - schema:
+            type: string
+            example: 'BTC_CAD,ETH_CAD'
+          in: query
+          name: symbol
+          description: Symbols to filter the list (Comma separated)
+  /order/new:
+    post:
+      summary: New Order
+      tags:
+        - Private
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Successful Order Creation:
+                  value:
+                    order_id: f95135fa-e965-49a5-9e64-7fa0c4283769
+                    symbol: BTC_CAD
+                    quantity: 0.5
+                    price: 10324
+                    order_type: LIMIT
+                    time_in_force: GTD
+                    side: BUY
+                    date_created: '2020-02-20T11:28:24.562390Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Negative Quantity Provided:
+                  value:
+                    quantity:
+                      - Provided quantity invalid.
+                'No / Negative Price Provided for GTD & GTC':
+                  value:
+                    price:
+                      - Provided price invalid.
+                No Expiry Time Provided for GTD:
+                  value:
+                    expiry_time:
+                      - Provided expiry time invalid.
+                Minimum Trade Amount Not Reached:
+                  value:
+                    errors:
+                      - Minimum order amount not reached.
+                Unspecified Error:
+                  value:
+                    errors:
+                      - Something went wrong. Please try again later.
+                Error Creating New Order:
+                  value:
+                    errors:
+                      - Problem creating the order.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                User Not Authenticated:
+                  value:
+                    detail: Authentication credentials were not provided.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              examples:
+                Permission Denied:
+                  value:
+                    detail: IP blocked.
+      operationId: post-order-new
+      description: Open a new order.
+      security:
+        - API Key: []
+        - Timestamp: []
+      requestBody:
+        content:
+          application/json:
+            examples:
+              IOC Example:
+                value:
+                  order_type: LIMIT
+                  time_in_force: IOC
+                  side: BUY
+                  symbol: BTC_CAD
+                  quantity: 0.001
+              GTC Example:
+                value:
+                  order_type: LIMIT
+                  time_in_force: GTC
+                  side: BUY
+                  symbol: ETH_CAD
+                  price: 200
+                  quantity: 10.2
+              GTD Example:
+                value:
+                  order_type: LIMIT
+                  time_in_force: GTD
+                  side: SELL
+                  symbol: LTC_CAD
+                  price: 10.234
+                  quantity: 3293.3
+                  expiry_time: '2021-01-01T11:11:11'
+              IOC with Webhook Example:
+                value:
+                  order_type: LIMIT
+                  time_in_force: IOC
+                  side: BUY
+                  symbol: XRP_CAD
+                  quantity: 10293
+                  webhook: 'https://www.yourserver.com/webhook?uid=b2fdd3fd-9016-4004-bad7-0e07a2372503'
+        description: |-
+          Parameters vary based on the order's time in force (see examples)
+
+          * **IOC**: no additional parameters needed.
+
+          * **GTC**: price parameter
+
+          * **GTD**: price parameter and expiry_time parameter
+
+          The "webhook" parameter is avaiable but optional for all order type. All query string parameters will be ignored apart from an optional "uid" parameter that can be specified and will be included when the web hook is called.
+  /order/open:
+    get:
+      summary: Get Open Orders
+      tags:
+        - Private
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                No Filter:
+                  value:
+                    - order_id: 74f21db4-6aca-4595-9616-0f3cc91ecdb2
+                      symbol: ETH_CAD
+                      quantity: 1
+                      price: 140.93943
+                      date_created: '2020-03-30T18:11:22.084443Z'
+                      order_type: LIMIT
+                      time_in_force: GTD
+                      side: SELL
+                      quantity_left: 0.23
+                      expiry_time: '2020-04-30T18:11:22.084443Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Invalid Limit Provided:
+                  value:
+                    limit:
+                      - Provided limit invalid.
+                Invalid Offset Provided:
+                  value:
+                    offset:
+                      - Provided offset invalid.
+                Invalid Symbol Provided:
+                  value:
+                    symbol:
+                      - Provided symbol invalid.
+                Invalid Time in Force Provided:
+                  value:
+                    time_in_force:
+                      - Provided time in force invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                User Not Authenticated:
+                  value:
+                    detail: Authentication credentials were not provided.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              examples:
+                Permission Denied:
+                  value:
+                    detail: IP blocked.
+      operationId: get-order-open
+      description: Get the list of all your open orders.
+      security:
+        - API Key: []
+        - Timestamp: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - IOC
+              - GTC
+              - GTD
+            example: IOC
+          in: query
+          name: time_in_force
+          description: Time in force to filter the list. (Comma separated)
+        - schema:
+            type: integer
+            example: 1
+            minimum: 0
+          in: query
+          name: limit
+          description: Number of orders to be returned.
+        - schema:
+            type: integer
+            example: 2
+            minimum: 0
+          in: query
+          name: offset
+          description: Offset for the number of orders to be returned.
+        - schema:
+            type: string
+            example: 'BTC_CAD,ETH_CAD'
+          in: query
+          name: symbol
+          description: Symbols to filter the list (Comma separated)
+  /order/cancel:
+    post:
+      summary: Cancel Order
+      tags:
+        - Private
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Cancellation Succesful:
+                  value:
+                    order_id: 8c1be04a-813d-4abd-8b15-9367686afaed
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Missing Order ID:
+                  value:
+                    order_id:
+                      - This field is required.
+                Order Not Found:
+                  value:
+                    errors:
+                      - Provided order id invalid.
+                Order Not Cancellable:
+                  value:
+                    errors:
+                      - Order can not be canceled.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                User Not Authenticated:
+                  value:
+                    detail: Authentication credentials were not provided.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              examples:
+                Permission Denied:
+                  value:
+                    detail: IP blocked.
+      operationId: post-api-order-cancel
+      description: Cancel an open order.
+      security:
+        - API Key: []
+        - Timestamp: []
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Body:
+                value:
+                  order_id: 8c1be04a-813d-4abd-8b15-9367686afaed
+    parameters: []
+  /actions:
+    get:
+      summary: Get Account Actions
+      tags:
+        - Private
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                No Filter:
+                  value:
+                    - type: DEPOSIT
+                      asset: BTC
+                      date_created: '2019-10-11T15:39:03.717583Z'
+                      quantity: 1
+                      status: REQUESTED
+                    - type: TRANSACT
+                      asset: BTC
+                      quantity: 1
+                      status: COMPLETED
+                      date_created: '2019-09-11T15:39:03.717583Z'
+                      price: 10939.23
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Invalid Limit Provided:
+                  value:
+                    limit:
+                      - Provided limit invalid.
+                Invalid Offset Provided:
+                  value:
+                    offset:
+                      - Provided offset invalid.
+                Invalid Action Type Provided:
+                  value:
+                    action_type:
+                      - Provided action type invalid.
+                Invalid Start/End Date:
+                  value:
+                    start_date:
+                      - Provided start and end date invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                User Not Authenticated:
+                  value:
+                    detail: Authentication credentials were not provided.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              examples:
+                Permission Denied:
+                  value:
+                    detail: IP blocked.
+      operationId: get-api-actions
+      description: Get the history of actions you made.
+      security:
+        - API Key: []
+        - Timestamp: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - DEPOSIT
+              - WITHDRAWAL
+              - TRANSACT
+            example: DEPOSIT
+          in: query
+          name: action_type
+          description: The type of action to filter the list. (Comma separated)
+        - schema:
+            type: integer
+            example: 1587416992
+          in: query
+          name: start_date
+          description: The lower limit for time filter. (Unix Epoch Timesamp)
+        - schema:
+            type: integer
+            example: 1587416992
+          in: query
+          name: end_date
+          description: The upper limit for time filter. (Unix Epoch Timesamp)
+        - schema:
+            type: integer
+            example: 1
+            minimum: 0
+          in: query
+          name: limit
+          description: Number of actions to be returned.
+        - schema:
+            type: integer
+            example: 2
+            minimum: 0
+          in: query
+          name: offset
+          description: Offset for the number of actions to be returned.
+    parameters: []
+  /balances:
+    get:
+      summary: Get Balances
+      tags:
+        - Private
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Get Balances:
+                  value:
+                    btc: 0.123
+                    cad: 20.1
+                    ltc: 0.456
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Invalid Asset Provided:
+                  value:
+                    errors:
+                      - Invalid asset specified.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                User Not Authenticated:
+                  value:
+                    detail: Authentication credentials were not provided.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              examples:
+                Permission Denied:
+                  value:
+                    detail: IP blocked.
+      operationId: get-api-balances
+      description: Get the balances of every asset.
+      security:
+        - API Key: []
+        - Timestamp: []
+      parameters:
+        - schema:
+            type: string
+            example: 'BTC,CAD'
+          in: query
+          name: asset
+          description: List of assets to filter which balance is returned. (Comma separated)
+    parameters: []
+  /symbols:
+    get:
+      summary: Get Symbols
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                No Filter Example:
+                  value:
+                    - BTC_CAD
+                    - ETH_CAD
+                    - LTC_CAD
+                    - ETH_BTC
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Invalid Asset Filter Specified:
+                  value:
+                    errors:
+                      - Invalid asset specified.
+      operationId: get-api-symbols
+      description: Receive the list of supported symbols.
+      security: []
+      parameters:
+        - schema:
+            type: string
+            example: 'BTC,ETH'
+          in: query
+          name: quote_asset
+          description: List of assets to filter the response based on quote asset.
+        - schema:
+            type: string
+            example: 'BTC,ETH'
+          in: query
+          name: base_asset
+          description: List of assets to filter the response based on base asset.
+      tags:
+        - Public
+    parameters: []
+  /health-check:
+    get:
+      summary: Healthcheck
+      tags:
+        - Public
+      responses:
+        '200':
+          description: Server is online.
+        '502':
+          description: Server is experiencing issues and is offline.
+      operationId: get-api-health-check
+      description: To get the health status of the Newton API.
+    parameters: []
+  /order/minimums:
+    get:
+      summary: Get Minimum Trade Amounts
+      tags:
+        - Public
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Get Minimums:
+                  value:
+                    BTC:
+                      buy: 0.00071211
+                      sell: 0.00071211
+                    CAD:
+                      buy: 10
+                      sell: 10
+                    LTC:
+                      buy: 0.13452322
+                      sell: 0.13452322
+      operationId: get-api-order-minimums
+      description: Get the minimum amount needed to create an order per asset.
+    parameters: []
+  /fees:
+    get:
+      summary: Get Applicable Fees (Maker/Taker)
+      tags:
+        - Public
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Get Fees:
+                  value:
+                    maker: 0.10
+                    taker: 0.10
+      operationId: get-api-fees
+      description: Get the maker and taker fees that will be applied to your order.
+    parameters: []
+components:
+  schemas: {}
+  securitySchemes:
+    API Key:
+      name: NewtonAPIAuth
+      type: apiKey
+      in: header
+      description: 'ClientID:Signature'
+    Timestamp:
+      name: NewtonDate
+      type: apiKey
+      in: header
+      description: Current time
+tags:
+  - name: Public
+    description: Endpoints that are open to everyone.
+  - name: Private
+    description: Endpoints that need the user to be authenticated.
