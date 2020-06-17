@@ -1,10 +1,12 @@
 # Authentication
 
-Authentication is only required for private endpoints. The following explains how to generate the proper HTTP headers:
+The Newton Pro API uses the HMAC-SHA256 signing method for REST requests. A signature must be included in every request to a private endpoint.
+
+This documentation explains how to generate the proper HTTP headers, including example code in several programming languages:
 
 #### ClientID:Signature
 
-**Client ID**: Is your unique client identifier.
+**Client ID**: Is your unique client identifier. You can find this under the API Access settings in the [Newton web app](https://web.newton.co).
 
 **Signature**:
   1) Concatenate the following using the character ":" as a delimiter:
@@ -18,12 +20,12 @@ Authentication is only required for private endpoints. The following explains ho
 
       -> Any request older than 5 minutes will be ignored.
 
-  2) Calculate the SHA256 hash of the concatenated string using your Client Secret Key
-  3) Encode the hash in base 64
+  2) Calculate the SHA256 hash of the concatenated string using your Client Secret Key found in the API Access settings in the [Newton web app](https://web.newton.co). 
+  3) Encode the hash in Base64
 
-#### Newton Date
+#### NewtonDate
 
-Need to be the same date as the one hashed in the signature. Format is unix epoch and it needs to be floored.
+Must be the same date as the one hashed in the signature. Format is unix epoch and it *must to be floored*.
 
 #### Code Samples for Signature Generation
 
@@ -45,7 +47,7 @@ final String CLIENT_SECRET = "Your Client Secret";
 String currentTime = Long.toString(System.currentTimeMillis() / 1000L);
 
 /*
-  If you have a body, you would use this instead of empty string below (replace BODY with actual request body):
+  If the request has a body, you would use this instead of empty string below (replace BODY with actual request body):
 
   MessageDigest digest = MessageDigest.getInstance("SHA-256");
   byte[] encodedHash = digest.digest("BODY".getBytes(StandardCharsets.UTF_8));
@@ -56,7 +58,7 @@ String[] signatureParameters = {
     "GET",
     "",
     "/api/PATH",
-    "",  //If you have a BODY, would be hashed_body
+    "",  //If the request has a BODY, this would be hashed_body
     currentTime
 };
 
@@ -94,14 +96,14 @@ CLIENT_SECRET = "Your Client Secret"
 
 current_time = str(floor(datetime.now().timestamp()))
 
-#If you have a body, you would use this instead of empty string below (replace BODY with actual request body):
+#If the request has a body, you would use this instead of empty string below (replace BODY with actual request body):
 #hashed_body = sha256(BODY).hexdigest()
 
 signature_parameters = [
     "GET",
     "",
     "/api/PATH",
-    "",  #If you have a BODY, would be hashed_body
+    "",  #If the request has a body, this would be hashed_body
     current_time
 ]
 
@@ -133,14 +135,14 @@ const CLIENT_SECRET = "Your Client Secret";
 
 const currentTime = Math.round((new Date()).getTime() / 1000);
 
-//If you have a body, you would use this instead of empty string below (replace BODY with actual request body):
+//If the request has a body, you would use this instead of empty string below (replace BODY with actual request body):
 //const hashed_body = crypto.createHash('sha256').update(BODY).digest('hex');
 
 const signatureParameters = [
     "GET",
     "",
     "/api/PATH",
-    "", //If you have a BODY, would be hashed_body
+    "", //If the request has a body, it would be hashed_body
     currentTime
 ];
 
