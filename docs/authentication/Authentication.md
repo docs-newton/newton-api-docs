@@ -4,7 +4,7 @@ The Newton Pro API uses the HMAC-SHA256 signing method for REST requests. A sign
 
 This documentation explains how to generate the proper HTTP headers, including example code in several programming languages:
 
-### ClientID:Signature
+#### ClientID:Signature
 
 **Client ID**: Is your unique client identifier. You can find this under the API Access settings in the [Newton web app](https://web.newton.co).
 
@@ -23,7 +23,7 @@ This documentation explains how to generate the proper HTTP headers, including e
   2) Calculate the SHA256 hash of the concatenated string using your Client Secret Key found in the API Access settings in the [Newton web app](https://web.newton.co). 
   3) Encode the hash in Base64
 
-#### NewtonDate:
+#### NewtonDate
 
 Must be the same date as the one hashed in the signature. Format is unix epoch and it *must to be floored*.
 
