@@ -1,6 +1,6 @@
 # Authentication
 
-The Newton Pro API uses the HMAC-SHA256 signing method for REST requests. A signature must be included in every request to a private endpoint.
+The Newton Pro API uses the HMAC-SHA256 signing method for REST requests. A signature must be included in every request to a private endpoint, but is not required for public endpoints. 
 
 This documentation explains how to generate the proper HTTP headers, including example code in several programming languages:
 
