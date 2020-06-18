@@ -7,10 +7,8 @@ info:
     email: hello@newton.co
     name: Newton
     url: 'https://www.newton.co/'
-  description: Newton Pro is a hyper-low-cost digital asset trading platform for active traders. Key features of Newton Pro include extremely low maker/taker fees (0.1%/0.1%), direct order book access, tight spreads, unbeatable liquidity and limit orders. The Newton Pro API provides unrestricted access to trading functions - however, adding or withdrawing of funds must be initiated through the Newton UI.
+  description: 'Newton Pro is a hyper-low-cost digital asset trading platform for active traders. Key features of Newton Pro include extremely low maker/taker fees (0.1%/0.1%), direct order book access, tight spreads, unbeatable liquidity and limit orders. The Newton Pro API provides unrestricted access to trading functions - however, adding or withdrawing of funds must be initiated through the Newton UI.'
 servers:
-  - url: 'http://localhost:8000/api'
-    description: Local
   - url: 'https://app.tradenewton.com/api'
     description: Production
 paths:
@@ -663,8 +661,8 @@ paths:
               examples:
                 Get Fees:
                   value:
-                    maker: 0.10
-                    taker: 0.10
+                    maker: 0.1
+                    taker: 0.1
       operationId: get-api-fees
       description: Get the maker and taker fees that will be applied to your order.
     parameters: []
