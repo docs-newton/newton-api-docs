@@ -219,6 +219,7 @@ paths:
                   side: BUY
                   symbol: BTC_CAD
                   quantity: 0.001
+                  price: 10000.1
               GTC Example:
                 value:
                   order_type: LIMIT
@@ -247,11 +248,11 @@ paths:
         description: |-
           Parameters vary based on the order's time in force (see examples)
 
-          * **IOC**: no additional parameters needed.
+          * **IOC**: no additional parameters needed. There will be a "fee" returned in the response.
 
-          * **GTC**: price parameter
+          * **GTC**: no additional parameters needed.
 
-          * **GTD**: price parameter and expiry_time parameter
+          * **GTD**: expiry_time parameter
 
           The "webhook" parameter is avaiable but optional for all order type. All query string parameters will be ignored apart from an optional "uid" parameter that can be specified and will be included when the web hook is called.
   /order/open:
@@ -428,7 +429,7 @@ paths:
                       date_created: '2019-10-11T15:39:03.717583Z'
                       quantity: 1
                       status: REQUESTED
-                    - type: TRANSACT
+                    - type: TRADE
                       asset: BTC
                       quantity: 1
                       status: COMPLETED
@@ -637,15 +638,15 @@ paths:
               examples:
                 Get Minimums:
                   value:
-                    BTC:
-                      buy: 0.00071211
-                      sell: 0.00071211
-                    CAD:
-                      buy: 10
-                      sell: 10
-                    LTC:
-                      buy: 0.13452322
-                      sell: 0.13452322
+                    BTC_USDC:
+                      buy: 0.01
+                      sell: 0.01
+                    ETH_USDC:
+                      buy: 0.1
+                      sell: 0.1
+                    ETH_QCAD:
+                      buy: 0.0001
+                      sell: 0.0001
       operationId: get-api-order-minimums
       description: Get the minimum amount needed to create an order per asset.
     parameters: []
