@@ -39,7 +39,7 @@ socket.on("update", (data) => {
 
 ## Channels
 
-### `SUB` /chart-data
+### `SUB` /v1/chart-data
 
 Real-time chart data for a specified trading pair and timeframe
 
@@ -91,7 +91,7 @@ Real-time chart data for a specified trading pair and timeframe
 }
 ```
 
-### `SUB` /order-book
+### `SUB` /v1/order-book
 
 Real-time order book for a specified trading pair
 
@@ -155,7 +155,7 @@ Real-time order book for a specified trading pair
 }
 ```
 
-### `SUB` /trading-history
+### `SUB` /v1/trading-history
 
 Real-time trading history for a specified trading pair
 
