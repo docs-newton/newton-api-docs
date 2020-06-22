@@ -9,7 +9,7 @@ info:
     url: 'https://www.newton.co/'
   description: 'Newton Pro is a hyper-low-cost digital asset trading platform for active traders. Key features of Newton Pro include extremely low maker/taker fees (0.1%/0.1%), direct order book access, tight spreads, unbeatable liquidity and limit orders. The Newton Pro API provides unrestricted access to trading functions - however, adding or withdrawing of funds must be initiated through the Newton UI.'
 servers:
-  - url: 'https://app.tradenewton.com/api'
+  - url: 'https://api.newton.co/v1'
     description: Production
 paths:
   /order/history:
