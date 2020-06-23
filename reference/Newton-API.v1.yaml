@@ -173,10 +173,10 @@ paths:
                   value:
                     expiry_time:
                       - Provided expiry time invalid.
-                Minimum Trade Amount Not Reached:
+                Invalid Trade Amount:
                   value:
                     errors:
-                      - Minimum order amount not reached.
+                      - Invalid order amount.
                 Unspecified Error:
                   value:
                     errors:
@@ -647,6 +647,31 @@ paths:
                       sell: 0.0001
       operationId: get-api-order-minimums
       description: Get the minimum amount needed to create an order per asset.
+    parameters: []
+  /order/maximum:
+    get:
+      summary: Get Maximum Trade Amounts
+      tags:
+        - Public
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Get Maximums:
+                  value:
+                    BTC_USDC:
+                      buy: 10
+                      sell: 10
+                    ETH_USDC:
+                      buy: 20
+                      sell: 20
+                    ETH_QCAD:
+                      buy: 1234
+                      sell: 1234
+      operationId: get-api-order-maximums
+      description: Get the maximum amount possible to create an order per asset.
     parameters: []
   /fees:
     get:
