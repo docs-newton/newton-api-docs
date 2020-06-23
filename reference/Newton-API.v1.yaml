@@ -648,7 +648,7 @@ paths:
       operationId: get-api-order-minimums
       description: Get the minimum amount needed to create an order per asset.
     parameters: []
-  /order/maximum:
+  /order/maximums:
     get:
       summary: Get Maximum Trade Amounts
       tags:
