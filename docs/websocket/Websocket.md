@@ -17,7 +17,7 @@ lineNumbers: true
 const io = require("socket.io-client");
 
 const socket = io.connect(
-  `https://ws.newton.co/chart-data?symbol=${symbol}&candle=${candle}`,
+  `https://ws.newton.co/v1/chart-data?symbol=${symbol}&candle=${candle}`,
   {
     transports: ["websocket"],
     reconnection: false,
