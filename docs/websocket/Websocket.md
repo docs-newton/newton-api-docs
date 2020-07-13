@@ -155,7 +155,7 @@ Real-time order book for a specified trading pair
 }
 ```
 
-### `SUB` /v1/trading-history
+### `SUB` /v1/trade-history
 
 Real-time trading history for a specified trading pair
 
