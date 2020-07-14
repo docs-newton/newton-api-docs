@@ -648,6 +648,28 @@ paths:
       operationId: get-api-order-minimums
       description: Get the minimum amount needed to create an order per asset.
     parameters: []
+  /order/tick-sizes:
+    get:
+      summary: Get Tick Sizes
+      tags:
+        - Public
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Get Tick Sizes:
+                  value:
+                    BTC_USDC:
+                      tick: 0.01
+                    ETH_USDC:
+                      tick: 0.011
+                    ETH_QCAD:
+                      tick: 0.0001
+      operationId: get-api-order-tick-sizes
+      description: Get the tick size for the different symbols.
+    parameters: []
   /order/maximums:
     get:
       summary: Get Maximum Trade Amounts
